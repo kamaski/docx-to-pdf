@@ -14,7 +14,8 @@ class Convert:
 
         logger.info("Running libreoffice to convert docx to pdf!")
         call(
-            f"libreoffice --headless --convert-to pdf --outdir {output_dir} {file_path}",
+            # f"libreoffice --headless --convert-to pdf --outdir {output_dir} {file_path}",
+            f"soffice --headless --convert-to pdf --outdir {output_dir} {file_path}",
             shell=True,
         )
 
