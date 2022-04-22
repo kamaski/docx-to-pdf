@@ -53,17 +53,25 @@ async def convert(file: UploadFile = File(...)):
 @app.post('/check_blacklist')
 def check_blacklist(client: Client):
     # чистые полученные даннные
-    not_translit_client = f"{client.first_name} {client.second_name} {client.last_name} {client.birth_date.strftime('%Y-%m-%d')} {client.birth_place} {client.category} {client.nationality}"
-    fio_client = f"{client.first_name} {client.second_name} {client.last_name}"
+    not_translit_client = f"{client.name} {client.surname} {client.last_name} {client.date_of_birth.strftime('%Y-%m-%d')} {client.place_of_birth} {client.pater_name} {client.nationality}"
+    fio_client = f"{client.name} {client.surname} {client.last_name}"
     # переведенные полученные данные
     translit_client, fio_translit_client = get_translit_client(client)
-    sanction_list, fio_client_list = get_list_data_sanction()
+    sanction_list, fio_client_list, id = get_list_data_sanction()
     # сравнивание по чистым данным
-    if compare_and_answer(sanction_list, not_translit_client) == 1 or compare_and_answer(fio_client_list, fio_client) == 1:
-        return 1
+    not_tran_data = compare_and_answer(sanction_list, not_translit_client, id)
+    not_tran_fio = compare_and_answer(fio_client_list, fio_client, id)
+    if not_tran_data:
+        return {"sanction": 1, "id": not_tran_data}
+    if not_tran_fio:
+        return {"sanction": 1, "id": not_tran_fio}
 
     # сравнивание по переведенным данным
-    if compare_and_answer(sanction_list, translit_client) == 1 or compare_and_answer(fio_client_list, fio_translit_client) == 1:
-        return 1
+    tran_data = compare_and_answer(sanction_list, translit_client, id)
+    fio_tran_data = compare_and_answer(fio_client_list, fio_translit_client, id)
+    if tran_data:
+        return {"sanction": 1, "id": not_tran_data}
+    if fio_tran_data:
+        return {"sanction": 1, "id": fio_tran_data}
 
-    return 0
+    return {"sanction": 0}

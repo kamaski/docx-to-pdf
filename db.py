@@ -19,12 +19,15 @@ def get_sanctioned_people():
         )
 
         cur = con.cursor()
-        cur.execute("SELECT * FROM sanction_entities")
+        cur.execute("select * from sanction_entities")
 
         rows = cur.fetchall()
 
         con.close()
-
         return rows
     except:
         return HTTPException(status_code=500, detail="Error connect to database")
+
+
+
+
