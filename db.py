@@ -19,7 +19,7 @@ def get_sanctioned_people():
         )
 
         cur = con.cursor()
-        cur.execute("SELECT * FROM sanctioned_entities")
+        cur.execute("SELECT * FROM sanction_entities")
 
         rows = cur.fetchall()
 
