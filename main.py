@@ -9,6 +9,8 @@ from pydantic import BaseModel, Json
 import config
 from convert import Convert
 from render import Render
+from schemas import Client, get_translit_client, get_list_data_sanction, compare_and_answer
+
 
 app = FastAPI()
 
@@ -46,3 +48,22 @@ async def convert(file: UploadFile = File(...)):
     if not converted_file.exists():
         raise HTTPException(status_code=500, detail="Failed to convert file.")
     return converted_file
+
+
+@app.post('/check_blacklist')
+def check_blacklist(client: Client):
+    # чистые полученные даннные
+    not_translit_client = f"{client.first_name} {client.second_name} {client.last_name} {client.birth_date.strftime('%Y-%m-%d')} {client.birth_place} {client.category} {client.nationality}"
+    fio_client = f"{client.first_name} {client.second_name} {client.last_name}"
+    # переведенные полученные данные
+    translit_client, fio_translit_client = get_translit_client(client)
+    sanction_list, fio_client_list = get_list_data_sanction()
+    # сравнивание по чистым данным
+    if compare_and_answer(sanction_list, not_translit_client) == 1 or compare_and_answer(fio_client_list, fio_client) == 1:
+        return 1
+
+    # сравнивание по переведенным данным
+    if compare_and_answer(sanction_list, translit_client) == 1 or compare_and_answer(fio_client_list, fio_translit_client) == 1:
+        return 1
+
+    return 0
