@@ -10,10 +10,9 @@ class Client(BaseModel):
     """модель получемых данных"""
     name: str
     surname: str
-    last_name: str
+    pater_name: str
     date_of_birth: date
     place_of_birth: str
-    pater_name: str
     nationality: str
 
 
@@ -25,8 +24,8 @@ def get_list_data_sanction():
     id = []
     sanctioned_people = get_sanctioned_people()
     for item in sanctioned_people:
-        sanctioned_data = [str(item[4]).strip(), str(item[5]).strip(), str(item[6]).strip(), str(item[7].strip()), str(item[8]).strip(), str(item[9]).strip(), str(item[10]).strip()]
-        fio_data = [str(item[4]).strip(), str(item[5]).strip(), str(item[6]).strip()]
+        sanctioned_data = [str(item[4]).strip(), str(item[5]).strip(), str(item[9]).strip(), str(item[7].strip()), str(item[8]).strip(), str(item[10]).strip()]
+        fio_data = [str(item[4]).strip(), str(item[5]).strip(), str(item[9]).strip()]
         fio_client_list.append(" ".join(fio_data))
         sanctioned_list.append(" ".join(sanctioned_data))
         id.append(item[0])
@@ -44,30 +43,28 @@ def get_translit_client(client):
         # полные данные
         en_client.append(translit(client.name, language_code='ru', reversed=True))
         en_client.append(translit(client.surname, language_code='ru', reversed=True))
-        en_client.append(translit(client.last_name, language_code='ru', reversed=True))
+        en_client.append(translit(client.pater_name, language_code='ru', reversed=True))
         en_client.append(client.date_of_birth.strftime('%Y-%m-%d'))
         en_client.append(translit(client.place_of_birth, language_code='ru', reversed=True))
-        en_client.append(translit(client.pater_name, language_code='ru', reversed=True))
         en_client.append(translit(client.nationality, language_code='ru', reversed=True))
         # ФИО
         en_fio_client.append(translit(client.name, language_code='ru', reversed=True))
         en_fio_client.append(translit(client.surname, language_code='ru', reversed=True))
-        en_fio_client.append(translit(client.last_name, language_code='ru', reversed=True))
+        en_fio_client.append(translit(client.pater_name, language_code='ru', reversed=True))
         return " ".join(en_client), " ".join(en_fio_client)
     if language == None:
         # полные данные
         ru_client.append(translit(client.name, 'ru'))
         ru_client.append(translit(client.surname, 'ru'))
-        ru_client.append(translit(client.last_name, 'ru'))
+        ru_client.append(translit(client.pater_name, 'ru'))
         ru_client.append(client.date_of_birth.strftime('%Y-%m-%d'))
         ru_client.append(translit(client.place_of_birth, 'ru'))
-        ru_client.append(translit(client.pater_name, 'ru'))
         ru_client.append(translit(client.nationality, 'ru'))
 
         # ФИО
         ru_fio_client.append(translit(client.name, 'ru'))
         ru_fio_client.append(translit(client.surname, 'ru'))
-        ru_fio_client.append(translit(client.last_name, 'ru'))
+        ru_fio_client.append(translit(client.pater_name, 'ru'))
 
         return " ".join(ru_client), " ".join(ru_fio_client)
 

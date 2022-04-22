@@ -2,12 +2,11 @@
 Сервис Sanctions (проверка по Блэк листу): точка входа (POST) - /check_blacklist
 
 {
-  "first_name": "string",
-  "second_name": "string",
-  "last_name": "string",
-  "birth_date": "2022-04-22",
-  "birth_place": "string",
-  "category": "string",
+  "name": "string",
+  "surname": "string",
+  "pater_name": "string",
+  "date_of_birth": "2022-04-22",
+  "place_of_birth": "string",
   "nationality": "string"
 }
 
