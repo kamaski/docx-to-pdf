@@ -50,28 +50,64 @@ async def convert(file: UploadFile = File(...)):
     return converted_file
 
 
+# @app.post('/check_blacklist')
+# def check_blacklist(client: Client):
+#     try:
+#         # чистые полученные даннные
+#         not_translit_client = f"{client.name} {client.surname} {client.pater_name} {client.date_of_birth} {client.place_of_birth} {client.nationality}"
+#         fio_client = f"{client.name} {client.surname} {client.pater_name}"
+#         # переведенные полученные данные
+#         translit_client, fio_translit_client = get_translit_client(client)
+#         sanction_list, fio_client_list, id = get_list_data_sanction()
+#         # сравнивание по чистым данным
+#         not_tran_data, percent_not_tran = compare_and_answer(sanction_list, not_translit_client, id)
+#         not_tran_fio, percent_tran_fio = compare_and_answer(fio_client_list, fio_client, id)
+#         if not_tran_data:
+#             return {"sanction": 1, "id": not_tran_data, "percent": percent_not_tran}
+#         if not_tran_fio:
+#             return {"sanction": 1, "id": not_tran_fio, "percent": percent_tran_fio}
+#
+#         # сравнивание по переведенным данным
+#         tran_data, percent_tran = compare_and_answer(sanction_list, translit_client, id)
+#         fio_tran_data, percent_fio = compare_and_answer(fio_client_list, fio_translit_client, id)
+#         if tran_data:
+#             return {"sanction": 1, "id": not_tran_data, "percent": percent_tran}
+#         if fio_tran_data:
+#             return {"sanction": 1, "id": fio_tran_data, "percent": percent_fio}
+#
+#         return {"sanction": 0}
+#     except:
+#         return HTTPException(status_code=500, detail="Error data")
+
+
+
 @app.post('/check_blacklist')
 def check_blacklist(client: Client):
-    # чистые полученные даннные
-    not_translit_client = f"{client.name} {client.surname} {client.pater_name} {client.date_of_birth.strftime('%Y-%m-%d')} {client.place_of_birth} {client.nationality}"
-    fio_client = f"{client.name} {client.surname} {client.pater_name}"
-    # переведенные полученные данные
-    translit_client, fio_translit_client = get_translit_client(client)
-    sanction_list, fio_client_list, id = get_list_data_sanction()
-    # сравнивание по чистым данным
-    not_tran_data = compare_and_answer(sanction_list, not_translit_client, id)
-    not_tran_fio = compare_and_answer(fio_client_list, fio_client, id)
-    if not_tran_data:
-        return {"sanction": 1, "id": not_tran_data}
-    if not_tran_fio:
-        return {"sanction": 1, "id": not_tran_fio}
+    try:
+        # чистые полученные даннные
+        not_translit_client = f"{client.name} {client.surname} {client.pater_name} {client.date_of_birth} {client.place_of_birth} {client.nationality}"
+        fio_client = f"{client.name} {client.surname} {client.pater_name}"
+        # переведенные полученные данные
+        translit_client, fio_translit_client = get_translit_client(client)
+        sanction_list, fio_client_list, id = get_list_data_sanction()
+        # сравнивание по чистым данным
+        not_tran_data = compare_and_answer(sanction_list, not_translit_client, id)
+        not_tran_fio = compare_and_answer(fio_client_list, fio_client, id)
+        if not_tran_data:
+            return {"sanction": 1, "id": not_tran_data}
+        if not_tran_fio:
+            return {"sanction": 1, "id": not_tran_fio}
 
-    # сравнивание по переведенным данным
-    tran_data = compare_and_answer(sanction_list, translit_client, id)
-    fio_tran_data = compare_and_answer(fio_client_list, fio_translit_client, id)
-    if tran_data:
-        return {"sanction": 1, "id": not_tran_data}
-    if fio_tran_data:
-        return {"sanction": 1, "id": fio_tran_data}
+        # сравнивание по переведенным данным
+        tran_data = compare_and_answer(sanction_list, translit_client, id)
+        fio_tran_data = compare_and_answer(fio_client_list, fio_translit_client, id)
+        if tran_data:
+            return {"sanction": 1, "id": not_tran_data}
+        if fio_tran_data:
+            return {"sanction": 1, "id": fio_tran_data}
 
-    return {"sanction": 0}
+        return {"sanction": 0}
+    except:
+        return HTTPException(status_code=500, detail="Error data")
+
+
